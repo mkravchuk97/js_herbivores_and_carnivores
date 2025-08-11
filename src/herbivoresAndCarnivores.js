@@ -10,13 +10,8 @@ class Animal {
   }
 
   checkAlive() {
-    if (this.health <= 0) {
-      const index = Animal.alive.indexOf(this);
-
-      if (index !== -1) {
-        Animal.alive.splice(index, 1);
-      }
-    }
+    // Перезаписуємо Animal.alive, відфільтровуючи тварин з health > 0
+    Animal.alive = Animal.alive.filter((animal) => animal.health > 0);
   }
 }
 
@@ -33,21 +28,15 @@ class Herbivore extends Animal {
 
 class Carnivore extends Animal {
   bite(target) {
-    if (!(target instanceof Herbivore)) {
-      return;
+    // Об'єднана перевірка в одному if
+    if (target instanceof Herbivore && !target.hidden) {
+      target.health -= 50;
+
+      if (target.health < 0) {
+        target.health = 0;
+      }
+      target.checkAlive();
     }
-
-    if (target.hidden) {
-      return;
-    }
-
-    target.health -= 50;
-
-    if (target.health < 0) {
-      target.health = 0;
-    }
-
-    target.checkAlive();
   }
 }
 
